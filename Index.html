@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080b12">
+  <title>NEXORA AI — Your Intelligence Hub</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #080b12;
+      color: #f4f7ff;
+    }
+    button, textarea { font: inherit; }
+    .app { min-height: 100vh; display: flex; }
+    aside {
+      width: 245px; padding: 26px 18px;
+      border-right: 1px solid #202838;
+      background: #0b0f18;
+    }
+    .logo { font-size: 25px; font-weight: 800; letter-spacing: 2px; }
+    .logo span { color: #4e9cff; }
+    .subtitle { color: #8490a5; font-size: 12px; margin: 8px 0 36px; }
+    .nav-label { color: #758198; font-size: 11px; margin: 24px 10px 10px; }
+    .nav {
+      width: 100%; text-align: left; padding: 13px 12px;
+      color: #aab5c8; background: transparent; border: 0;
+      border-radius: 10px; margin: 3px 0; cursor: pointer;
+    }
+    .nav.active, .nav:hover { background: #152641; color: #72b2ff; }
+    .main { flex: 1; min-width: 0; padding: 28px; }
+    .top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .badge { color: #8ebfff; background: #11213a; border: 1px solid #203c60; padding: 8px 12px; border-radius: 20px; font-size: 12px; }
+    h1 { font-size: clamp(28px, 5vw, 42px); margin: 48px 0 10px; letter-spacing: -1.5px; }
+    .intro { color: #96a2b7; line-height: 1.7; }
+    .cards { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; margin: 30px 0; }
+    .card { background: linear-gradient(145deg,#111a2a,#0d121d); border: 1px solid #202c40; border-radius: 16px; padding: 20px; cursor: pointer; }
+    .card:hover { border-color: #438be9; transform: translateY(-2px); }
+    .icon { font-size: 25px; }
+    .card h3 { font-size: 16px; margin: 17px 0 8px; }
+    .card p { color: #94a1b5; font-size: 13px; line-height: 1.6; }
+    .panel { border: 1px solid #263349; background: #0d131e; border-radius: 18px; padding: 20px; }
+    .panel h2 { font-size: 18px; margin-top: 0; }
+    textarea {
+      width: 100%; min-height: 110px; resize: vertical; padding: 16px;
+      background: #080d16; border: 1px solid #293750; border-radius: 12px;
+      color: white; outline: none; line-height: 1.6;
+    }
+    textarea:focus { border-color: #4e9cff; }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+    .primary, .secondary { border-radius: 10px; padding: 12px 17px; cursor: pointer; }
+    .primary { background: #347fe5; color: white; border: 0; font-weight: 700; }
+    .secondary { background: #151e2d; border: 1px solid #2c3b52; color: #d8e5fa; }
+    #output { color: #dce6f7; line-height: 1.8; white-space: pre-wrap; overflow-wrap: anywhere; margin-top: 16px; }
+    .note { color: #77869d; font-size: 12px; margin-top: 18px; }
+    .mobile-title { display: none; }
+    @media(max-width:760px) {
+      aside { display: none; }
+      .main { padding: 20px 15px 35px; }
+      .mobile-title { display: block; }
+      h1 { margin-top: 36px; }
+      .cards { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
+      .card { padding: 15px; }
+      .badge { font-size: 10px; }
+    }
+    @media(max-width:380px) {
+      .cards { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside>
+    <div class="logo">NEXORA<span>.</span></div>
+    <div class="subtitle">YOUR INTELLIGENCE HUB</div>
+    <div class="nav-label">WORKSPACE</div>
+    <button class="nav active" data-tool="assistant">✦ AI Assistant</button>
+    <button class="nav" data-tool="writer">✎ AI Writer</button>
+    <button class="nav" data-tool="business">◈ Business Assistant</button>
+    <button class="nav" data-tool="study">⌘ Study Assistant</button>
+    <div class="nav-label">YOUR SPACE</div>
+    <button class="nav" id="savedButton">▤ Saved Projects</button>
+  </aside>
+  <main class="main">
+    <div class="top">
+      <div class="logo mobile-title">NEXORA<span>.</span></div>
+      <div class="badge">✦ YOUR AI WORKSPACE</div>
+    </div>
+    <h1 id="heading">Think bigger. <span style="color:#60a5fa">Build smarter.</span></h1>
+    <p class="intro" id="intro">Your ideas deserve more. What would you like to accomplish today?</p>
+    <section class="cards">
+      <div class="card" data-tool="assistant"><div class="icon">✦</div><h3>AI Assistant</h3><p>Explore ideas and get help with everyday challenges.</p></div>
+      <div class="card" data-tool="writer"><div class="icon">✎</div><h3>AI Writer</h3><p>Create articles, emails, captions and scripts.</p></div>
+      <div class="card" data-tool="business"><div class="icon">◈</div><h3>Business Assistant</h3><p>Develop business ideas and marketing plans.</p></div>
+      <div class="card" data-tool="study"><div class="icon">⌘</div><h3>Study Assistant</h3><p>Understand topics and prepare for examinations.</p></div>
+      <div class="card" data-tool="ideas"><div class="icon">✧</div><h3>Idea Generator</h3><p>Find fresh approaches to your next project.</p></div>
+      <div class="card" data-tool="saved"><div class="icon">▤</div><h3>Saved Projects</h3><p>Keep useful responses on this device.</p></div>
+    </section>
+    <section class="panel">
+      <h2 id="panelTitle">✦ Ask NEXORA</h2>
+      <textarea id="prompt" placeholder="Tell NEXORA what you're thinking about..."></textarea>
+      <div class="actions">
+        <button class="primary" id="generate">Generate ideas ↗</button>
+        <button class="secondary" id="clear">Clear</button>
+      </div>
+      <div id="output" aria-live="polite"></div>
+      <div class="actions" id="saveActions" hidden>
+        <button class="secondary" id="save">Save response</button>
+        <button class="secondary" id="copy">Copy response</button>
+      </div>
+      <p class="note">Preview version · AI responses require a secure AI service connection.</p>
+    </section>
+  </main>
+</div>
+<script>
+const tools = {
+ assistant:{title:"Think bigger. Build smarter.",intro:"Your ideas deserve more. What would you like to accomplish today?",panel:"✦ Ask NEXORA",placeholder:"Ask a question or describe a challenge...",button:"Generate ideas ↗"},
+ writer:{title:"Words that move ideas forward.",intro:"Create a first draft for your next big idea.",panel:"✎ AI Writer",placeholder:"What should I write? Include the audience and tone...",button:"Draft content ↗"},
+ business:{title:"Build your next big opportunity.",intro:"Turn your business idea into a plan of action.",panel:"◈ Business Assistant",placeholder:"Describe your business, audience, or marketing challenge...",button:"Develop my idea ↗"},
+ study:{title:"Learn with greater clarity.",intro:"Break down a difficult subject into manageable steps.",panel:"⌘ Study Assistant",placeholder:"Enter a topic or question you want to understand...",button:"Create study guide ↗"},
+ ideas:{title:"Make room for new possibilities.",intro:"Give your creativity a starting point.",panel:"✧ Idea Generator",placeholder:"What topic, problem, or project should inspire ideas?",button:"Generate ideas ↗"}
+};
+let current="assistant",lastResponse="";
+const $=id=>document.getElementById(id);
+function selectTool(name){
+ if(name==="saved"){showSaved();return;}
+ current=tools[name]?name:"assistant";
+ document.querySelectorAll("[data-tool]").forEach(el=>el.classList.toggle("active",el.dataset.tool===current&&el.classList.contains("nav")));
+ $("heading").textContent=tools[current].title;
+ if(current==="assistant") $("heading").innerHTML='Think bigger. <span style="color:#60a5fa">Build smarter.</span>';
+ $("intro").textContent=tools[current].intro;
+ $("panelTitle").textContent=tools[current].panel;
+ $("prompt").placeholder=tools[current].placeholder;
+ $("generate").textContent=tools[current].button;
+ $("output").textContent="";
+ $("saveActions").hidden=true;
+}
+document.querySelectorAll("[data-tool]").forEach(el=>el.addEventListener("click",()=>selectTool(el.dataset.tool)));
+$("savedButton").addEventListener("click",showSaved);
+$("generate").addEventListener("click",()=>{
+ const prompt=$("prompt").value.trim();
+ if(!prompt){$("output").textContent="Please enter a question or idea first.";return;}
+ lastResponse="NEXORA WORKSPACE PREVIEW\n\nYour request: "+prompt+"\n\nSuggested next steps:\n1. Define the outcome you want to achieve.\n2. Break the task into smaller, practical steps.\n3. Identify the resources and information you need.\n4. Take the first action and review the result.\n\nThis is a local preview response. Connect a secure AI API to enable real AI-generated answers.";
+ $("output").textContent=lastResponse;
+ $("saveActions").hidden=false;
+});
+$("clear").addEventListener("click",()=>{$("prompt").value="";$("output").textContent="";$("saveActions").hidden=true;});
+$("save").addEventListener("click",()=>{
+ const items=JSON.parse(localStorage.getItem("nexora-projects")||"[]");
+ items.unshift({prompt:$("prompt").value,response:lastResponse,date:new Date().toLocaleString()});
+ localStorage.setItem("nexora-projects",JSON.stringify(items.slice(0,50)));
+ $("output").textContent="Saved on this device. Open Saved Projects to view it.";
+});
+$("copy").addEventListener("click",async()=>{
+ try{await navigator.clipboard.writeText(lastResponse);$("output").textContent="Response copied to clipboard.";}
+ catch(e){$("output").textContent=lastResponse;}
+});
+function showSaved(){
+ const items=JSON.parse(localStorage.getItem("nexora-projects")||"[]");
+ $("heading").textContent="Your ideas, kept close.";
+ $("intro").textContent="Responses saved on this device.";
+ $("panelTitle").textContent="▤ Saved Projects";
+ $("output").textContent=items.length?items.map((x,i)=>(i+1)+". "+x.date+"\n"+x.prompt+"\n"+x.response).join("\n\n──────────\n\n"):"No saved projects yet. Generate a response and tap Save response.";
+ $("saveActions").hidden=true;
+ window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
+}
+</script>
+</body>
+</html>
