@@ -1,11 +1,12 @@
+const json = (statusCode, payload) => ({
+  statusCode,
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(payload)
+});
+
 exports.handler = async (event) => {
   if (event.httpMethod !== "POST") {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({
-        error: "Method not allowed"
-      })
-    };
+    return json(405, { error: "Method not allowed" });
   }
 
   try {
@@ -18,29 +19,19 @@ exports.handler = async (event) => {
     const body = JSON.parse(event.body || "{}");
     const message = body.message;
 
-    if (
-      typeof message !== "string" ||
-      !message.trim()
-    ) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({
-          error: "Please enter a message."
-        })
-      };
+    if (typeof message !== "string" || !message.trim()) {
+      return json(400, { error: "Please enter a message." });
     }
 
     if (message.length > 10000) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({
-          error: "Your message is too long."
-        })
-      };
+      return json(400, { error: "Your message is too long." });
     }
 
+    // Check Google's docs for the current model name if this one stops working.
+    const model = "gemini-2.5-flash";
+
     const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent",
+      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
       {
         method: "POST",
         headers: {
@@ -48,15 +39,7 @@ exports.handler = async (event) => {
           "x-goog-api-key": apiKey
         },
         body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                {
-                  text: message.trim()
-                }
-              ]
-            }
-          ]
+          contents: [{ parts: [{ text: message.trim() }] }]
         })
       }
     );
@@ -64,48 +47,24 @@ exports.handler = async (event) => {
     const data = await response.json();
 
     if (!response.ok) {
-      console.error("Gemini API error:", data);
-
-      return {
-        statusCode: 502,
-        body: JSON.stringify({
-          error: "The AI service could not respond. Please try again."
-        })
-      };
+      console.error("Gemini API error:", JSON.stringify(data));
+      return json(502, {
+        error: "The AI service could not respond. Please try again."
+      });
     }
 
-    const answer =
-      data.candidates?.[0]?.content?.parts
-        ?.map(part => part.text || "")
-        .join("")
-        .trim();
+    const answer = data.candidates?.[0]?.content?.parts
+      ?.map(part => part.text || "")
+      .join("")
+      .trim();
 
     if (!answer) {
-      return {
-        statusCode: 502,
-        body: JSON.stringify({
-          error: "The AI returned an empty response."
-        })
-      };
+      return json(502, { error: "The AI returned an empty response." });
     }
 
-    return {
-      statusCode: 200,
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        answer
-      })
-    };
+    return json(200, { answer });
   } catch (error) {
     console.error("NEXORA function error:", error);
-
-    return {
-      statusCode: 500,
-      body: JSON.stringify({
-        error: "Something went wrong. Please try again."
-      })
-    };
+    return json(500, { error: "Something went wrong. Please try again." });
   }
 };
